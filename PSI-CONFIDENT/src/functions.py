@@ -3,11 +3,19 @@ import hmac
 import random
 import string
 from datetime import datetime, timedelta
+from Crypto.Cipher import AES
 import sys
 
 
 def key_generator(size=7, chars=string.ascii_letters + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
+def encrypt_message():
+    key = key_generator()
+    iv = random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CFB, iv)
+    msg = iv + cipher.encrypt(b'Attack at dawn')
+    print(msg)
 
 
 def get_function(hash_name):

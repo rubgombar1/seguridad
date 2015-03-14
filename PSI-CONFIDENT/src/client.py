@@ -6,8 +6,8 @@ from datetime import datetime
 s = socket.socket()
 port = 6032
 s.connect(("localhost", port))
-message = input('Introduzca su mensaje: ')
-hash_name = input('Introduzca la función resumen a utilizar(SHA256, SHA384 ó SHA512): ')
+message = raw_input('Introduzca su mensaje: ')
+hash_name = raw_input('Introduzca la funcion resumen a utilizar(SHA256, SHA384 o SHA512): ')
 message = message.encode()
 date = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 uid = uuid.uuid1()

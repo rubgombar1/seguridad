@@ -14,11 +14,11 @@ while True:
         integrity = check_integrity(message, nonce, mac, key, hash_name)
         if integrity:
             print('El mensaje (' + message + ') ha llegado libre de ataque replay y se ha conservado su integridad')
-            a = ('El mensaje ha llegado libre de ataque de replay e íntegro').encode()
+            a = ('El mensaje ha llegado libre de ataque de replay e integro').encode()
             c.send(a)
         if not integrity:
             print('El mensaje (' + message + ') ha llegado libre de ataque replay pero no se ha conservado su integridad')
-            a = ('El mensaje ha llegado libre de ataque de replay pero no ha llegado íntegro').encode()
+            a = ('El mensaje ha llegado libre de ataque de replay pero no ha llegado integro').encode()
             c.send(a)
     else:
         print('El mensaje (' + message + ') puede haber sufrido un ataque de replay')
