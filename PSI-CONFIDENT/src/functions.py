@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import hmac
 import random
@@ -5,6 +6,7 @@ import string
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 import sys
+from test_DH import DiffieHellman
 
 
 def key_generator(size=7, chars=string.ascii_letters + string.digits):
@@ -100,3 +102,17 @@ def check_replay(nonce):
             res = True
     clean_db_nonces()
     return res
+
+def create_diffieHellman():
+    DH = DiffieHellman()
+    return DH
+
+def encode_AES(message, secret):
+    BLOCK_SIZE = 32
+    PADDING = 'skd'
+    pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
+    EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
+    cipher = AES.new(secret)
+    while message.__len__()%16!=0:
+        message += ' '
+    return EncodeAES(cipher, message)

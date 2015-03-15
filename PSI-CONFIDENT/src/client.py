@@ -1,14 +1,21 @@
 import socket
 import uuid
-from functions import calculate_mac
+from functions import calculate_mac, create_diffieHellman, encode_AES
 from datetime import datetime
 
+DH = create_diffieHellman()
 s = socket.socket()
 port = 6032
 s.connect(("localhost", port))
+s.send(str(DH.publicKey).encode())
+server_public_key = int(s.recv(2048))
+DH.generateKey(server_public_key)
+print len(DH.getKey()[:len(DH.getKey())/2])
 message = raw_input('Introduzca su mensaje: ')
 hash_name = raw_input('Introduzca la funcion resumen a utilizar(SHA256, SHA384 o SHA512): ')
-message = message.encode()
+message_cipher = encode_AES(message, DH.getKey()[:len(DH.getKey())/2])
+print(message_cipher)
+message = message_cipher.encode()
 date = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 uid = uuid.uuid1()
 key = open('key-client.txt', 'r')

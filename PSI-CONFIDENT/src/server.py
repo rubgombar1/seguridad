@@ -1,11 +1,16 @@
 import socket
-from functions import recieved_request, check_integrity, check_replay
+from functions import recieved_request, check_integrity, check_replay, create_diffieHellman
 
 server_socket = socket.socket()
 server_socket.bind(("localhost",  6032))
 server_socket.listen(5)
 while True:
     c, addr = server_socket.accept()
+    client_public_key = int(c.recv(2048))
+    DH = create_diffieHellman()
+    c.send(str(DH.publicKey).encode())
+    DH.generateKey(client_public_key)
+    print DH.getKey()
     request = c.recv(1024)
     message, mac, nonce, hash_name = recieved_request(request.decode())
     if check_replay(nonce):

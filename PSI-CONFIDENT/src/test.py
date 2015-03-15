@@ -18,6 +18,7 @@ DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
 
 # generate a random secret key
 secret = os.urandom(BLOCK_SIZE)
+print base64.b64encode(secret)
 # create a cipher object using the random secret
 cipher = AES.new(secret)
 message = raw_input('Mete mensaje ome: ')
