@@ -6,7 +6,7 @@ import string
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 import sys
-from test_DH import DiffieHellman
+from DiffieHellman import DiffieHellman
 
 
 def key_generator(size=7, chars=string.ascii_letters + string.digits):
@@ -49,7 +49,8 @@ def recieved_request(request):
     mac = response[1]
     nonce = response[2]
     hash_name = response[3]
-    return message, mac, nonce, hash_name
+    count = int(response[4])
+    return message, mac, nonce, hash_name, count
 
 
 def check_integrity(message, nonce, mac, key, hash_name):
@@ -60,7 +61,7 @@ def check_integrity(message, nonce, mac, key, hash_name):
         res = True
     else:
         log = open('log.txt', 'a')
-        log.write(message + '\n')
+        log.write('El mensaje' + message + 'no se puede garantizar que se haya podido descifrar correctamente' + '\n')
     return res
 
 
@@ -113,6 +114,15 @@ def encode_AES(message, secret):
     pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
     EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
     cipher = AES.new(secret)
+    count = 0
     while message.__len__()%16!=0:
+        count += 1
         message += ' '
-    return EncodeAES(cipher, message)
+    return EncodeAES(cipher, message), count
+
+def decode_AES(message_cipher, secret, count):
+    PADDING = 'skd'
+    DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
+    cipher = AES.new(secret)
+    decode = DecodeAES(cipher, message_cipher)
+    return decode[:len(decode)-count]
