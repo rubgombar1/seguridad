@@ -4,6 +4,7 @@ from functions import calculate_mac, create_diffieHellman, encode_AES, decode_AE
 from datetime import datetime
 
 DH = create_diffieHellman()
+print 'tarda'
 s = socket.socket()
 port = 6032
 s.connect(("localhost", port))
